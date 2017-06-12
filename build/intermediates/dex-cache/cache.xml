@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/6579233aca5105ac19abaf3cf694c5919e999e47/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_68fe0dcf5e654bafbc4c47e1cd4eadf18964910c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/d59a8e3a161efbeadefff748a29e74345d5f53fa/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_7fa22f430be0c45818fbef7870c4b43f98afedc5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/af530f6e9681cbc70aea662a7c4906e2bfc0fa84/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_4bc62bc9a476da6bbb00f9906b0d5c1dc46544cc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/18ed3ffaab2c77fceb09f8925afbfc3f06ecd00e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_88a833d416a677d3ddce42f18015ebc7f162f3bb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/18ed3ffaab2c77fceb09f8925afbfc3f06ecd00e/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.1_04e28cdc9cd08d2d7994f30586ba0c984c3ee7de.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.1/support-annotations-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/support-annotations-24.2.1_cae53eff9f32e54ca73cb5de3168c42105e156ef.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/6e257c663f4175e07b626ecdbe58e1d6bf952bcd/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.1_95e9cdcb32815204bf47d3ccee565da2159d85c9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/574df99fb8eee52715a2a79d814e8fa4dc96b6e0/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_3f22c177a973020a72515a1f332e9828e309055d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/c3c6f609c47f38145447059dfe1af1a101e8a9a4/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.1_7d09202606c9b2756cb2caced6addbb3f2a57a81.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/fa527a527b770d13f393ddbf1bd3acfa76d71d62/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_14137d2c03467e46eaffb10d3c1b94bb60b3ac38.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/743116ee3215a597ba4af592777a340ea6282592/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.1_8b2ce30e5b098e877fc6ca40faea8528c30b14e4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/6e257c663f4175e07b626ecdbe58e1d6bf952bcd/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_ee4fca741060daeba56b00d45e7d5548345a34f1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.gradle/caches/modules-2/files-2.1/com.readystatesoftware.sqliteasset/sqliteassethelper/2.0.1/d5f02e4a4d65ec0fbb339f2e4228723d1540bb9f/sqliteassethelper-2.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d5f02e4a4d65ec0fbb339f2e4228723d1540bb9f">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/sqliteassethelper-2.0.1_9f90d1aa1a22c7e4bf723a29dcaea03803558af9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/743116ee3215a597ba4af592777a340ea6282592/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_1045fc6cbb4347295e0d2d04db5460337a19633e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/c3c6f609c47f38145447059dfe1af1a101e8a9a4/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_efeaf3da55b3c57f0be739c2e1b0191169020a62.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/58457fb1be146510d29452768d0909ae880b89f0/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_1c5cf082c8b189a8e2e81510b5ddd1c4f85ef18c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/f17fb973fa2bf61d0c374614d8243c35dca56d49/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_4e340738249c616d71fcdec3681f7086371d9929.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/fa527a527b770d13f393ddbf1bd3acfa76d71d62/output/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.1_2bbe8c7855ac192924ee4f313d995997ed907cb2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_0d483502e7db946c8af62e8ca1884b054da20ed2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/users/kamil/.android/build-cache/3e8d5b34482ea29f82a9ef68bf29de90937c048b/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="/home/users/kamil/AndroidStudioProjects/CukroWag/app/build/intermediates/pre-dexed/debug/classes_5eb4c2104bb3caed42d1dc11131fc50b6a71a580.jar" />
+    </item>
+
+</items>

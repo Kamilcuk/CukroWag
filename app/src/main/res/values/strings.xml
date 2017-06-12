@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CukroWag</string>
+    <string name="action_meal">Posiłki</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="pref_scale_test">pref_scale_test</string>
+    <string name="pref_enable_usb_weight_scale">pref_enable_usb_weight_scale</string>
+    <string name="pref_refresh_fooddatabase">pref_refresh_fooddatabase</string>
+    <string name="add_ingredient_dialog_waga_button">Waga</string>
+</resources>

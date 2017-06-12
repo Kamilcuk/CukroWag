@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kamil.cukrowag"
+    android:versionCode="1"
+    android:versionName="1.0" >
+    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-sdk android:minSdkVersion="12" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ActivityAddIngredient"
+            android:parentActivityName=".activity.MainActivity" >
+        </activity>
+
+        <activity android:name=".activity.ActivityAddMeal"
+            android:parentActivityName=".activity.MainActivity" >
+        </activity>
+
+        <activity android:name=".activity.ActivityAddMealAddIngredient"
+            android:parentActivityName=".activity.ActivityAddMeal"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/add_ingredient_searchable"/>
+        </activity>
+
+        <activity android:name=".activity.MyPreferencesActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher" >
+        </activity>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Waga">
+        <CheckBoxPreference
+            android:key="@string/pref_enable_usb_weight_scale"
+            android:title="Enable usb weight scale?"
+            android:summary="Enable usb weight scale?" />
+        <Preference android:title="Przetestuj odczyt z wagi"
+            android:key="@string/pref_scale_test" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Dodatki">
+        <Preference android:title="Załaduj defaultowa baze danych"
+            android:summary="UWAGA: to wykasuje całą aktualną bazę danych!"
+            android:key="@string/pref_refresh_fooddatabase" />
+    </PreferenceCategory>
+</PreferenceScreen>
