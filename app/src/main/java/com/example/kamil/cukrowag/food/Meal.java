@@ -1,5 +1,7 @@
 package com.example.kamil.cukrowag.food;
 
+import com.example.kamil.cukrowag.util.logger;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,8 +12,7 @@ import java.util.Iterator;
  * Created by kamil on 10.06.17.
  */
 
-public class Meal extends HasId implements Serializable {
-    public String name = new String();
+public class Meal extends HasIdName implements Serializable {
     public Date creationDate = new Date();
     public ArrayList<IngredientPart> ingredients = new ArrayList<IngredientPart>();
 
@@ -19,11 +20,18 @@ public class Meal extends HasId implements Serializable {
         this.setId(-1);
         this.name = o.name;
         this.creationDate = o.creationDate;
-        this.ingredients = new ArrayList<IngredientPart>(o.ingredients);
+        this.ingredients = new ArrayList<IngredientPart>();
+        for(IngredientPart ip : o.ingredients) {
+            try {
+                this.ingredients.add(new IngredientPart(ip.ingredient, ip.howmuch));
+            } catch(Exception e) {
+                logger.l(e.toString());
+            }
+        }
     }
 
-    public Meal(int id) {
-        setId(id);
+    public Meal() {
+        super();
     }
 
     public Meal add(Ingredient i, double howmuch) throws Exception {

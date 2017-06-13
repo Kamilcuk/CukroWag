@@ -30,13 +30,14 @@ import com.example.kamil.cukrowag.util.logger;
  * Created by kamil on 11.06.17.
  */
 
-public class ActivityAddMeal extends AppCompatActivity  {
+public class ActivityAddMeal extends AppCompatActivity {
+    public static Meal mMeal;
+
+    FoodDatabase mFoodDatabase;
     Button mAddIngredientButton, mOkButton, mCancelButton;
     TextView mInfo;
     EditText mName;
     Context mContext;
-    public static Meal mMeal = null;
-    static FoodDatabase mFoodDatabase;
     ListView mIngredientsList;
     ArrayAdapter<IngredientPart> mIngredientsListAdapter;
     boolean addnew;
@@ -53,19 +54,16 @@ public class ActivityAddMeal extends AppCompatActivity  {
         mFoodDatabase = MainActivity.mFoodDatabase;
 
         addnew = mMeal == null;
-        if ( addnew ) {
-            mMeal = new Meal(-1);
-            if ( mMeal == null ) {
-                throw new RuntimeException("mMeal == null");
-            }
+        if (addnew) {
+            mMeal = new Meal();
         }
 
-        mName = (EditText)findViewById(R.id.add_meal_name);
+        mName = (EditText) findViewById(R.id.add_meal_name);
         mName.setText(mMeal.name);
 
-        mInfo = (TextView)findViewById(R.id.add_meal_info);
+        mInfo = (TextView) findViewById(R.id.add_meal_info);
 
-        mIngredientsList = (ListView)findViewById(R.id.add_meal_ingredients_info);
+        mIngredientsList = (ListView) findViewById(R.id.add_meal_ingredients_info);
         mIngredientsListAdapter = new ArrayAdapter<IngredientPart>(this, R.layout.abstract_row_left_right, mMeal.ingredients) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -73,7 +71,7 @@ public class ActivityAddMeal extends AppCompatActivity  {
                 if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_left_right, parent, false);
                 }
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText( i.toString() );
+                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(i.toString());
                 ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText("");
                 return convertView;
             }
@@ -103,11 +101,12 @@ public class ActivityAddMeal extends AppCompatActivity  {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User cancelled the dialog
                                 mMeal.ingredients.remove(ip);
+                                onResume();
                                 dialog.cancel();
                             }
                         }).create();
 
-                mDialogWaga = (Button)DialogView.findViewById(R.id.add_ingredient_dialog_waga_button);
+                mDialogWaga = (Button) DialogView.findViewById(R.id.add_ingredient_dialog_waga_button);
                 mDialogWaga.setEnabled(MainActivity.mScale != null);
                 mDialogWaga.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -116,20 +115,21 @@ public class ActivityAddMeal extends AppCompatActivity  {
                     }
                 });
 
-                mDialogEditText = (EditText)DialogView.findViewById(R.id.add_ingredient_dialog_waga_edittext);
+                mDialogEditText = (EditText) DialogView.findViewById(R.id.add_ingredient_dialog_waga_edittext);
                 mDialogEditText.post(new Runnable() {
                     public void run() {
                         mDialogEditText.requestFocusFromTouch();
-                        InputMethodManager lManager = (InputMethodManager)ActivityAddMeal.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager lManager = (InputMethodManager) ActivityAddMeal.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                         lManager.showSoftInput(mDialogEditText, 0);
                     }
                 });
+                mDialogEditText.setText(String.format("%.2f", ip.howmuch));
 
                 mDialog.show();
             }
         });
 
-        mAddIngredientButton = (Button)findViewById(R.id.add_meal_add_ingredient);
+        mAddIngredientButton = (Button) findViewById(R.id.add_meal_add_ingredient);
         mAddIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -137,28 +137,28 @@ public class ActivityAddMeal extends AppCompatActivity  {
             }
         });
 
-        mOkButton = (Button)findViewById(R.id.add_meal_ok);
+        mOkButton = (Button) findViewById(R.id.add_meal_ok);
         mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if ( mName.getText() == null || mName.getText().toString().isEmpty() ) {
+                if (mName.getText() == null || mName.getText().toString().isEmpty()) {
                     Toast.makeText(mContext, "Posiłek musi miec nazwę", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if ( mMeal.ingredients.size() == 0 ) {
+                if (mMeal.ingredients.size() == 0) {
                     Toast.makeText(mContext, "Posiłek musi miec składniki", Toast.LENGTH_LONG).show();
                     return;
                 }
                 mMeal.name = mName.getText().toString();
-                if ( addnew ) {
-                    mFoodDatabase.add(mMeal);
+                if (addnew) {
+                    mFoodDatabase.add(new Meal(mMeal));
                 }
                 mMeal = null;
                 finish();
             }
         });
 
-        mCancelButton = (Button)findViewById(R.id.add_meal_remove);
+        mCancelButton = (Button) findViewById(R.id.add_meal_remove);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -167,39 +167,48 @@ public class ActivityAddMeal extends AppCompatActivity  {
                 finish();
             }
         });
+
+
+        if (addnew) {
+            getSupportActionBar().setTitle("Dodaj posiłek");
+            mCancelButton.setText("Anuluj");
+        } else {
+            getSupportActionBar().setTitle("Edytuj posiłek");
+            mCancelButton.setText("Usuń");
+        }
     }
 
 
     private void mDialogWagaOnClick(View arg0) {
-        if ( MainActivity.mScale != null ) {
+        if (MainActivity.mScale != null) {
             try {
-                mDialogEditText.setText(String.format("%2f", MainActivity.mScale.getWeightReport().getWeight()));
-            } catch(Exception e) {
-                Toast.makeText(this, "Blad wewnetrzny: "+e.toString(), Toast.LENGTH_LONG).show();
+                mDialogEditText.setText(String.format("%.2f", MainActivity.mScale.getWeightReport().getWeight()));
+            } catch (Exception e) {
+                Toast.makeText(this, "Blad wewnetrzny: " + e.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
 
 
     private void mDialogPositiveButton(final IngredientPart ip) {
-        if ( mDialogEditText == null ) {
+        if (mDialogEditText == null) {
             Toast.makeText(this, "mDialogEditText == null", Toast.LENGTH_LONG).show();
             return;
         }
-        if ( mDialogEditText.getText() == null ) {
+        if (mDialogEditText.getText() == null) {
             Toast.makeText(this, "mDialogEditText.getText() == null", Toast.LENGTH_LONG).show();
             return;
         }
-        String str = mDialogEditText.getText().toString().replace(',','.');
+        String str = mDialogEditText.getText().toString().replace(',', '.');
         double howmuch;
         try {
             howmuch = Double.parseDouble(str);
-        } catch(NumberFormatException mfe) {
+        } catch (NumberFormatException mfe) {
             Toast.makeText(this, "Waga składnika musi być liczbą zmiennoprzecinkową", Toast.LENGTH_LONG).show();
             return;
         }
-        if ( howmuch <= 0 ) {
-            Toast.makeText(this, "Waga składnika ("+String.format("%.2f", howmuch)+") musi być większa od zera", Toast.LENGTH_LONG).show();
+        if (howmuch <= 0) {
+            Toast.makeText(this, "Waga składnika (" + String.format("%.2f", howmuch) + ") musi być większa od zera", Toast.LENGTH_LONG).show();
             return;
         }
         ip.howmuch = howmuch;
@@ -212,19 +221,12 @@ public class ActivityAddMeal extends AppCompatActivity  {
         logger.l("");
         super.onResume();
 
-        if ( addnew ) {
-            getSupportActionBar().setTitle("Dodaj posiłek");
-        } else {
-            getSupportActionBar().setTitle("Edytuj posiłek");
-        }
-
-
         mMeal.name = mName.getText().toString();
         Ingredient mealsum = mMeal.sum();
         String str =
                 String.format("Posiłek: %s\n", mMeal.toString()) +
-                String.format("Ilosć składników: %d\n", mMeal.ingredients.size()) +
-                String.format("Wartości odżywcze posiłku:\n%s", mealsum.toString());
+                        String.format("Ilosć składników: %d\n", mMeal.ingredients.size()) +
+                        String.format("Wartości odżywcze posiłku:\n%s", mealsum.toStringNoName());
         mInfo.setText(str);
 
         mIngredientsListAdapter.notifyDataSetChanged();

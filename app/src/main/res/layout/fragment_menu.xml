@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/pizza"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:maxHeight="100dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:id="@+id/fragment_menu_scaleinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waga jest podłączona"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:layout_marginTop="28dp"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/fragment_menu_button_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_menu_textView_weight"
+        android:layout_centerHorizontal="true"
+        android:text="Zważ" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="CukroWag"
+        android:textAppearance="@android:style/TextAppearance.Large" />
+
+    <Button
+        android:id="@+id/fragment_menu_button_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Informacje"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp" />
+
+    <TextView
+        android:id="@+id/fragment_menu_textView_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_menu_scaleinfo"
+        android:layout_centerHorizontal="true"
+        android:minWidth="20pt"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+</RelativeLayout>

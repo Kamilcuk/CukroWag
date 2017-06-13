@@ -18,12 +18,14 @@ import com.example.kamil.cukrowag.util.logger;
  */
 
 public class ActivityAddIngredient extends AppCompatActivity {
+    static Ingredient mIngredient;
+
     TextView WW, WBT;
     EditText name, calories, protein, fat, carbs, fiber;
     Context mContext;
     FoodDatabase mFoodDatabase;
-    Ingredient mIngredient = new Ingredient();
     Button cancel, ok, refresh;
+    boolean addnew = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +45,7 @@ public class ActivityAddIngredient extends AppCompatActivity {
         WW = (TextView) findViewById(R.id.activity_add_ingredient_WW);
         WBT = (TextView) findViewById(R.id.activity_add_ingredient_WBT);
 
-        cancel = (Button) findViewById(R.id.activity_add_ingredient_cancel);
-        ok = (Button) findViewById(R.id.activity_add_ingredient_ok);
         refresh = (Button) findViewById(R.id.activity_add_ingredient_refresh);
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,16 +54,41 @@ public class ActivityAddIngredient extends AppCompatActivity {
             }
         });
 
+        cancel = (Button) findViewById(R.id.activity_add_ingredient_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ( addnew == false ) {
+                    mFoodDatabase.remove(mIngredient);
+                    mIngredient = null;
+                }
+                finish();
+            }
+        });
+
+        ok = (Button) findViewById(R.id.activity_add_ingredient_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 refreshTextView();
                 if ( checkValues() ) {
-                    mFoodDatabase.add(mIngredient);
+                    if ( addnew == true ) {
+                        mFoodDatabase.add(mIngredient);
+                    }
                     finish();
                 }
             }
         });
+
+        addnew = mIngredient == null;
+        if ( addnew ) {
+            getSupportActionBar().setTitle("Dodaj posiłek");
+            mIngredient = new Ingredient();
+        } else {
+            getSupportActionBar().setTitle("Edytuj posiłek");
+            cancel.setText("Usuń");
+            loadValues();
+        }
     }
 
     @Override
@@ -85,14 +102,27 @@ public class ActivityAddIngredient extends AppCompatActivity {
         WBT.setText(String.format("%.1f", mIngredient.getWBT()));
     }
 
-    public boolean checkValues() {
-        mIngredient.name = name.getText().toString();
-        for(Ingredient i : mFoodDatabase.mIngredients) {
-            if ( i.name == mIngredient.name ) {
-                logger.t(mContext, "Składnik z taką nazwą już istnieje");
-                return false;
+    private void loadValues()
+    {
+        name.setText(mIngredient.name);
+        calories.setText(String.format("%.1f", mIngredient.calories));
+        protein.setText(String.format("%.1f", mIngredient.protein));
+        fat.setText(String.format("%.1f", mIngredient.fat));
+        carbs.setText(String.format("%.1f", mIngredient.carbs));
+        fiber.setText(String.format("%.1f", mIngredient.fiber));
+        refreshTextView();
+    }
+
+    private boolean checkValues() {
+        if ( !addnew || ( addnew && mIngredient.name != name.getText().toString() ) ) {
+            for (Ingredient i : mFoodDatabase.mIngredients) {
+                if (name.getText().toString() == mIngredient.name) {
+                    logger.t(mContext, "Składnik z taką nazwą już istnieje");
+                    return false;
+                }
             }
         }
+        mIngredient.name = name.getText().toString();
         try {
             double temp = Double.valueOf(calories.getText().toString());
             if ( temp <= 0 ) {

@@ -1,6 +1,5 @@
 package com.example.kamil.cukrowag.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,17 +9,19 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.kamil.cukrowag.R;
 import com.example.kamil.cukrowag.food.FoodDatabase;
-import com.example.kamil.cukrowag.util.logger;
+import com.example.kamil.cukrowag.food.IngredientPart;
+import com.example.kamil.cukrowag.food.Meal;
 import com.example.kamil.cukrowag.scale.Scale;
 import com.example.kamil.cukrowag.scale.UsbScale;
+import com.example.kamil.cukrowag.util.logger;
 
 import java.io.IOException;
 
@@ -31,17 +32,26 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences prefs = null;
     static public FoodDatabase mFoodDatabase;
     static final String mFoodDatabaseFileName = "mFoodDatabase.dat";
+    TabLayout mTabLayout;
+    int mViewPagerPos = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         mViewPager.setAdapter(mPagerAdapter);
+
+        mTabLayout = (TabLayout) findViewById(R.id.activity_main_tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(R.mipmap.ic_launcher);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_meal);
+        mTabLayout.getTabAt(2).setIcon(R.drawable.ic_food);
+        mViewPager.setCurrentItem(1);
+
         // Set the intent filter for the broadcast receiver, and register.
         IntentFilter filter = new IntentFilter();
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
@@ -49,27 +59,49 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        if (HandleSerializable.canLoad(this, mFoodDatabaseFileName) == false || prefs.getBoolean("firstrun", true) == true) {
+        if ( HandleSerializable.canLoad(this, mFoodDatabaseFileName) == false || prefs.getBoolean("firstrun", true) == true) {
             // Do first run stuff here then set 'firstrun' as false
             importFoodDatabase(this);
+            try {
+                Meal m = new Meal();
+                m.ingredients.add(new IngredientPart(mFoodDatabase.findObj(mFoodDatabase.getIngredients(), 1), 100));
+                m.name = "test posilek1";
+                mFoodDatabase.add(m);
+            } catch (Exception e) {
+                logger.a(this, e.toString());
+            }
+            try {
+                Meal m = new Meal();
+                m.ingredients.add(new IngredientPart(mFoodDatabase.findObj(mFoodDatabase.getIngredients(), 2), 100));
+                m.name = "test posilek2";
+                mFoodDatabase.add(m);
+            } catch (Exception e) {
+                logger.a(this, e.toString());
+            }
+
             prefs.edit().putBoolean("firstrun", false).commit();
         } else {
+            FoodDatabase temp;
             try {
-                mFoodDatabase = (FoodDatabase) HandleSerializable.load(this, mFoodDatabaseFileName);
+                temp = (FoodDatabase) HandleSerializable.load(this, mFoodDatabaseFileName);
+                mFoodDatabase = temp;
             } catch(IOException | ClassNotFoundException e) {
                 logger.a(this, e.toString());
                 mFoodDatabase = new FoodDatabase();
             }
         }
 
+
         logger.l(this, "");
     }
 
     static public void importFoodDatabase(Context context) {
-        mFoodDatabase = new FoodDatabase();
+        FoodDatabase temp;
         try {
-            mFoodDatabase.databaseImport(context);
+            temp = new FoodDatabase();
+            temp.databaseImport(context);
             logger.t(context, "Zaimportowano nową bazę danych");
+            mFoodDatabase = temp;
         } catch(Exception e) {
             logger.a(context, e.toString());
         }
@@ -104,51 +136,38 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_add_meal:
-                switch( mViewPager.getCurrentItem() ) {
-                    case 0: {
-                        ActivityAddMeal.mMeal = null;
-                        Intent intent = new Intent(this, ActivityAddMeal.class);
-                        startActivity(intent);
-                    }   break;
-                    case 1: {
-                        Intent intent = new Intent(this, ActivityAddIngredient.class);
-                        startActivity(intent);
-                    }   break;
-                    default:
-                        logger.t(this, "Internal error: This should be disabled!!");
-                        break;
-                }
-                return true;
-            case R.id.action_meals:
+            case R.id.action_add_meal: {
+                ActivityAddMeal.mMeal = null;
+                Intent intent = new Intent(this, ActivityAddMeal.class);
+                startActivity(intent);
+            }   return true;
+            case R.id.action_add_ingredient: {
+                ActivityAddIngredient.mIngredient = null;
+                Intent intent = new Intent(this, ActivityAddIngredient.class);
+                startActivity(intent);
+            }    return true;
+            case R.id.action_menu:
                 mViewPager.setCurrentItem(0);
                 return true;
-            case R.id.action_ingredients:
+            case R.id.action_meals:
                 mViewPager.setCurrentItem(1);
                 return true;
-            case R.id.action_scale:
+            case R.id.action_ingredients:
                 mViewPager.setCurrentItem(2);
                 return true;
-            case R.id.action_settings:
+            case R.id.action_information:{
+                Intent intent = new Intent(this, ActivityInformation.class);
+                startActivity(intent);
+            }    return true;
+            case R.id.action_settings: {
                 Intent i = new Intent(this, MyPreferencesActivity.class);
                 startActivity(i);
-                return true;
+            }    return true;
             case R.id.action_exit:
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-            }
-        }
     }
 
     private void scaleConnect(UsbDevice usbDevice) {
@@ -172,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         Intent intent = getIntent();
         if (intent != null) {
             logger.l(this, "intent: " + intent.toString());
@@ -185,6 +205,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        if(mViewPager != null && mViewPagerPos > 0 ) {
+            mViewPager.setCurrentItem(mViewPagerPos);
+        }
     }
 
     // Catch a USB detach broadcast intent.
@@ -195,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
                 if (device != null) {
                 }
                 scaleDisconnect();
+                onResume();
             }
         }
     };

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.kamil.cukrowag.util.logger;
 import com.example.kamil.cukrowag.util.Consumer1;
+import com.example.kamil.cukrowag.util.logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,11 +16,9 @@ import java.util.Date;
  */
 
 public class FoodDatabase implements Serializable {
-    static final long serialVersionUID = 42L;
     public ArrayList<Ingredient> mIngredients = new ArrayList<Ingredient>();
     public ArrayList<IngredientCategory> mIngredientCategories = new ArrayList<IngredientCategory>();
     public ArrayList<Meal> mMeals = new ArrayList<Meal>();
-
     final static String table_categories = "categories";
     final static String table_ingredients = "ingridients";
     final static String table_meals_ingredients = "meals_ingredients";
@@ -96,9 +94,9 @@ public class FoodDatabase implements Serializable {
                     new Consumer1<Cursor>() {
                         @Override
                         public void accept(Cursor cursor) {
-                            mMeals.add(
-                                    new Meal(cursor.getInt(cursor.getColumnIndexOrThrow("id")))
-                            );
+                            Meal m = new Meal();
+                            m.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                            mMeals.add(m);
                         }
                     }
             );
@@ -134,32 +132,19 @@ public class FoodDatabase implements Serializable {
 
 
     public Meal add(Meal m) {
-        if ( m == null ) {
-            m = new Meal(getNextId(mMeals));
-        } else {
-            m.setId(getNextId(mMeals));
-        }
+        m.setId(getNextId(mMeals));
         m.creationDate = new Date();
-        if ( m.name == null ) {
-            throw new RuntimeException("m.name == null");
-        }
         logger.l(m.getId() + " " + m.name);
         mMeals.add(m);
         return m;
     }
     public Ingredient add(Ingredient m)   {
-        if ( m.name == null ) {
-            throw new RuntimeException("m.name == null");
-        }
         logger.l(m.getId() + " " + m.name);
         m.setId(getNextId(mIngredients));
         mIngredients.add(m);
         return m;
     }
     public IngredientCategory add(IngredientCategory m){
-        if ( m.name == null ) {
-            throw new RuntimeException("m.name == null");
-        }
         logger.l(m.getId() + " " + m.name);
         m.setId(getNextId(mIngredientCategories));
         mIngredientCategories.add(m);
@@ -180,7 +165,7 @@ public class FoodDatabase implements Serializable {
         mIngredientCategories.remove(m);
     }
 
-    public <T extends HasId> T findObj(ArrayList<T> list, int list_id) throws Exception {
+    public <T extends HasIdName> T findObj(ArrayList<T> list, int list_id) throws Exception {
         for(T i : list) {
             if ( i.getId() == list_id ) {
                 return i;
@@ -189,7 +174,7 @@ public class FoodDatabase implements Serializable {
         throw new Exception("findId: list_id="+list_id+" not found");
     }
 
-    public <T extends HasId> void update(ArrayList<T> list, T newObject, int list_id) throws Exception  {
+    public <T extends HasIdName> void update(ArrayList<T> list, T newObject, int list_id) throws Exception  {
         for (int i = 0; i < list.size(); ++i) {
             if ( list.get(i).getId() == list_id ) {
                 list.set(i, newObject);
@@ -199,7 +184,7 @@ public class FoodDatabase implements Serializable {
         throw new Exception("update: list_id="+list_id+" not found");
     }
 
-    public <T extends HasId> int getNextId(ArrayList<T> list) {
+    public <T extends HasIdName> int getNextId(ArrayList<T> list) {
         int ret = -1;
         for(T l : list) {
             if (l.getId() > ret) {
@@ -207,5 +192,17 @@ public class FoodDatabase implements Serializable {
             }
         }
         return ret;
+    }
+
+    public ArrayList<Ingredient> getIngredients() {
+        return mIngredients;
+    }
+
+    public ArrayList<IngredientCategory> getIngredientCategories() {
+        return mIngredientCategories;
+    }
+
+    public ArrayList<Meal> getMeals() {
+        return mMeals;
     }
 }

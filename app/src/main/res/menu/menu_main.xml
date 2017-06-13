@@ -5,30 +5,32 @@
     android:id="@+id/menu_main" >
     <item
         android:id="@+id/action_add_meal"
-        android:orderInCategory="1"
         android:title="Dodaj potrawę"
-        android:icon="@drawable/ic_add_meal"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_ingredient"
+        android:title="Dodaj składnik"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_menu"
+        android:title="CukroWag"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_meals"
-        android:orderInCategory="2"
         android:title="@string/action_meal"
         android:icon="@drawable/ic_meal"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_ingredients"
-        android:orderInCategory="3"
         android:title="Składniki"
         android:icon="@drawable/ic_food"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
-        android:id="@+id/action_scale"
-        android:orderInCategory="4"
-        android:title="Waga"
+        android:id="@+id/action_information"
+        android:title="Informacje"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="5"
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item

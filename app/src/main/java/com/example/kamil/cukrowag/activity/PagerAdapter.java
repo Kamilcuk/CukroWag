@@ -5,20 +5,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import static com.example.kamil.cukrowag.R.id.action_add_meal;
-
 /**
  * Created by kamil on 09.06.17.
  */
 
 public class PagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Posiłki", "Składniki", "Waga" };
-    Context mContext;
+    private String tabTitles[] = new String[] { "Menu", "Posiłki", "Składniki" };
 
     public PagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        mContext = context;
     }
 
     @Override
@@ -30,11 +26,11 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return new fragment_meal();
+                return new fragment_menu();
             case 1:
-                return new fragment_ingredient();
+                return new fragment_meal();
             case 2:
-                return new fragment_scale();
+                return new fragment_ingredient();
         }
         return null;
     }

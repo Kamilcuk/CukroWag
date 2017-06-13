@@ -31,6 +31,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.ActivityInformation"
+            android:parentActivityName=".activity.MainActivity" >
+        </activity>
+
         <activity android:name=".activity.ActivityAddIngredient"
             android:parentActivityName=".activity.MainActivity" >
         </activity>
