@@ -18,8 +18,9 @@ import com.example.kamil.cukrowag.util.logger;
  */
 
 public class ActivityAddIngredient extends AppCompatActivity {
-    static Ingredient mIngredient;
+    static int mIngredientId;
 
+    Ingredient mIngredient;
     TextView WW, WBT;
     EditText name, calories, protein, fat, carbs, fiber;
     Context mContext;
@@ -80,15 +81,19 @@ public class ActivityAddIngredient extends AppCompatActivity {
             }
         });
 
-        addnew = mIngredient == null;
-        if ( addnew ) {
-            getSupportActionBar().setTitle("Dodaj posiłek");
-            mIngredient = new Ingredient();
-        } else {
-            getSupportActionBar().setTitle("Edytuj posiłek");
-            cancel.setText("Usuń");
-            loadValues();
+        {
+            Bundle b = getIntent().getExtras();
+            addnew = b == null || b.containsKey("id") == false || b.getInt("id") < 0;
+            logger.l(this, "addnew="+addnew+" id="+b.getInt("id"));
+            if (addnew) {
+                mIngredient = new Ingredient();
+            } else {
+                mIngredient = mFoodDatabase.findIngredient( b.getInt("id") );
+                loadValues();
+            }
         }
+        getSupportActionBar().setTitle(addnew ? "Dodaj posiłek" : "Edytuj posiłek");
+        cancel.setText(addnew ? "Anuluj" : "Usuń");
     }
 
     @Override
@@ -123,9 +128,10 @@ public class ActivityAddIngredient extends AppCompatActivity {
             }
         }
         mIngredient.name = name.getText().toString();
+
         try {
-            double temp = Double.valueOf(calories.getText().toString());
-            if ( temp <= 0 ) {
+            double temp = Double.valueOf(calories.getText().toString().replace(',','.'));
+            if ( temp < 0 ) {
                 throw new NumberFormatException("temp<=0");
             }
             mIngredient.calories = temp;
@@ -133,9 +139,10 @@ public class ActivityAddIngredient extends AppCompatActivity {
             logger.t(mContext, "Kalorie musza być liczbą większą od zera.\n" + nfe.toString());
             return false;
         }
+
         try {
-            double temp = Double.valueOf(protein.getText().toString());
-            if ( temp <= 0 ) {
+            double temp = Double.valueOf(protein.getText().toString().replace(',','.'));
+            if ( temp < 0 ) {
                 throw new NumberFormatException("temp<=0");
             }
             mIngredient.protein = temp;
@@ -143,9 +150,10 @@ public class ActivityAddIngredient extends AppCompatActivity {
             logger.t(mContext, "Białka musza być liczbą większą od zera.\n" + nfe.toString());
             return false;
         }
+
         try {
-            double temp = Double.valueOf(fat.getText().toString());
-            if ( temp <= 0 ) {
+            double temp = Double.valueOf(fat.getText().toString().replace(',','.'));
+            if ( temp < 0 ) {
                 throw new NumberFormatException("temp<=0");
             }
             mIngredient.fat = temp;
@@ -153,9 +161,10 @@ public class ActivityAddIngredient extends AppCompatActivity {
             logger.t(mContext, "Tłuszcze musza być liczbą większą od zera.\n" + nfe.toString());
             return false;
         }
+
         try {
-            double temp = Double.valueOf(carbs.getText().toString());
-            if ( temp <= 0 ) {
+            double temp = Double.valueOf(carbs.getText().toString().replace(',','.'));
+            if ( temp < 0 ) {
                 throw new NumberFormatException("temp<=0");
             }
             mIngredient.carbs = temp;
@@ -163,9 +172,10 @@ public class ActivityAddIngredient extends AppCompatActivity {
             logger.t(mContext, "Węglowodany musza być liczbą większą od zera.\n" + nfe.toString());
             return false;
         }
+
         try {
-            double temp = Double.valueOf(fiber.getText().toString());
-            if ( temp <= 0 ) {
+            double temp = Double.valueOf(fiber.getText().toString().replace(',','.'));
+            if ( temp < 0 ) {
                 throw new NumberFormatException("temp<=0");
             }
             mIngredient.fiber = temp;
@@ -173,6 +183,7 @@ public class ActivityAddIngredient extends AppCompatActivity {
             logger.t(mContext, "Białka musza być liczbą większą od zera.\n" + nfe.toString());
             return false;
         }
+
         return true;
     }
 

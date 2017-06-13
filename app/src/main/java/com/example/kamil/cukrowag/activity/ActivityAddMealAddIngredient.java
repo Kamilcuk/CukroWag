@@ -7,25 +7,24 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.kamil.cukrowag.R;
 import com.example.kamil.cukrowag.food.FoodDatabase;
 import com.example.kamil.cukrowag.food.Ingredient;
 import com.example.kamil.cukrowag.food.Meal;
+
+import java.util.ArrayList;
 
 /**
  * Created by kamil on 11.06.17.
@@ -41,28 +40,22 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
     AlertDialog dialog;
     Button mDialogWaga;
     EditText mDialogEditText;
-    private Meal mMeal;
+
+    public static Meal mMeal = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_meal_add_ingredient);
         mFoodDatabase = MainActivity.mFoodDatabase;
-        mMeal = ActivityAddMeal.mMeal;
+
+        if ( mMeal == null ) {
+            throw new RuntimeException("mMeal == null");
+        }
+
         mList = (ListView)findViewById(R.id.add_ingredient_list);
 
-        mListAdapter = new ArrayAdapter<Ingredient>(this, R.layout.abstract_row_left_right, mFoodDatabase.mIngredients) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                Ingredient i = getItem(position);
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_left_right, parent, false);
-                }
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(i.toString());
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText("");
-                return convertView;
-            }
-        };
+        mListAdapter = new ArrayAdapterIngredient(this, R.layout.abstract_row_title_left_right, new ArrayList<Ingredient>(mFoodDatabase.mIngredients));
         mList.setAdapter(mListAdapter);
 
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,6 +65,14 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
                 addIngredientToMealDialog( mListAdapter.getItem(position) );
             }
         });
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        mMeal = null;
+        super.onDestroy();
     }
 
     private void addIngredientToMealDialog(final Ingredient i) {
@@ -79,13 +80,13 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
         dialog = new AlertDialog.Builder(this)
                 .setMessage(i.toString()).setTitle("Dodaj składnik do posiłku")
                 .setView(DialogView)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
                         mDialogPositiveButton(i);
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                         dialog.cancel();
@@ -110,6 +111,10 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
             }
         });
 
+        if ( MainActivity.mScale != null ) {
+            mDialogWagaOnClick(null);
+        }
+
         dialog.show();
 
     }
@@ -117,7 +122,7 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
     private void mDialogWagaOnClick(View arg0) {
         if ( MainActivity.mScale != null ) {
             try {
-                mDialogEditText.setText(String.format("%2f", MainActivity.mScale.getWeightReport().getWeight()));
+                mDialogEditText.setText(String.format("%.1f", MainActivity.mScale.getWeightReport().getWeight()));
             } catch(Exception e) {
                 Toast.makeText(this, "Blad wewnetrzny: "+e.toString(), Toast.LENGTH_LONG).show();
             }

@@ -1,10 +1,12 @@
 package com.example.kamil.cukrowag.food;
 
+import java.io.Serializable;
+
 /**
  * Created by kamil on 11.06.17.
  */
 
-public class HasIdName {
+public class HasIdName implements Serializable {
     private int id;
     public String name;
     HasIdName() {

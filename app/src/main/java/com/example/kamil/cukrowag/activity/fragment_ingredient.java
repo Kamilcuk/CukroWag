@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.example.kamil.cukrowag.R;
 import com.example.kamil.cukrowag.food.FoodDatabase;
@@ -17,8 +15,6 @@ import com.example.kamil.cukrowag.food.Ingredient;
 import com.example.kamil.cukrowag.util.logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by kamil on 10.06.17.
@@ -33,18 +29,7 @@ public class fragment_ingredient extends FragmentListSearch<Ingredient> {
 
         mFoodDatabase = MainActivity.mFoodDatabase;
 
-        super.setListAdapter(new ArrayAdapter<Ingredient>(mContext, R.layout.abstract_row_left_right, new ArrayList<Ingredient>(mFoodDatabase.mIngredients)) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                Ingredient i = getItem(position);
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_left_right, parent, false);
-                }
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(i.toString());
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText("");
-                return convertView;
-            }
-        });
+        super.setListAdapter(new ArrayAdapterIngredient(mContext, R.layout.abstract_row_title_left_right, new ArrayList<Ingredient>(mFoodDatabase.mIngredients)));
 
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,19 +43,19 @@ public class fragment_ingredient extends FragmentListSearch<Ingredient> {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                final Ingredient i = mListAdapter.getItem(position);
+                final Ingredient i = mFoodDatabase.findIngredient(mListAdapter.getItem(position).getId());
                 new AlertDialog.Builder(mContext)
-                        .setTitle("Usunąć składnik z bazy?")
+                        .setTitle("Czy usunąć składnik?")
                         .setMessage(i.toString())
-                        .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Usuń", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK button
+                                // User cancelled the dialog
                                 mFoodDatabase.mIngredients.remove(i);
                                 onResume();
                                 dialog.cancel();
                             }
                         })
-                        .setNegativeButton("Nie", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Anuluj", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User cancelled the dialog
                                 dialog.cancel();
@@ -91,15 +76,15 @@ public class fragment_ingredient extends FragmentListSearch<Ingredient> {
         return view;
     }
 
-    private void newIngredient() {
-        ActivityAddIngredient.mIngredient = null;
+    private void editIngredient(final Ingredient i) {
         Intent intent = new Intent(mContext, ActivityAddIngredient.class);
+        intent.putExtra("id", i.getId());
         startActivity(intent);
     }
 
-    private void editIngredient(final Ingredient i) {
-        ActivityAddIngredient.mIngredient = i;
+    private void newIngredient() {
         Intent intent = new Intent(mContext, ActivityAddIngredient.class);
+        intent.putExtra("id", -1);
         startActivity(intent);
     }
 
@@ -107,12 +92,6 @@ public class fragment_ingredient extends FragmentListSearch<Ingredient> {
     public void onResume() {
         logger.l("mFoodDatabase.mIngredients.size()="+mFoodDatabase.mIngredients.size()+" mQuerystring="+mQuerystring);
         super.onResume();
-        Collections.sort(mFoodDatabase.mIngredients, new Comparator<Ingredient>() {
-            @Override
-            public int compare(Ingredient m2, Ingredient m1) {
-                return m2.name.compareTo(m1.name);
-            }
-        });
         super.filterRefreshListAdapter(mFoodDatabase.mIngredients);
     }
 }

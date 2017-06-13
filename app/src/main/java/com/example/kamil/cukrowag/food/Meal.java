@@ -13,6 +13,7 @@ import java.util.Iterator;
  */
 
 public class Meal extends HasIdName implements Serializable {
+    static final long serialVersionUID = 42L;
     public Date creationDate = new Date();
     public ArrayList<IngredientPart> ingredients = new ArrayList<IngredientPart>();
 

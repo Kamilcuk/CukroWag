@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:paddingLeft="0dp"
+        android:paddingRight="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/abstract_row_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textAppearance="@android:style/TextAppearance.Medium" />
+
+        <TextView
+            android:id="@+id/abstract_row_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="left\nleft longer line lomger longer longer line " />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="5dp"
+        android:paddingRight="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center|end">
+
+        <TextView
+            android:id="@+id/abstract_row_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="right\nright longer line"
+            android:gravity="center|right"
+            android:maxLines="2" />
+
+    </LinearLayout>
+
+</LinearLayout>

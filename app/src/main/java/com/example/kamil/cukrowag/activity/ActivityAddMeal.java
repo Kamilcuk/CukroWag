@@ -26,13 +26,14 @@ import com.example.kamil.cukrowag.food.IngredientPart;
 import com.example.kamil.cukrowag.food.Meal;
 import com.example.kamil.cukrowag.util.logger;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by kamil on 11.06.17.
  */
 
 public class ActivityAddMeal extends AppCompatActivity {
-    public static Meal mMeal;
-
+    Meal mMeal;
     FoodDatabase mFoodDatabase;
     Button mAddIngredientButton, mOkButton, mCancelButton;
     TextView mInfo;
@@ -44,6 +45,7 @@ public class ActivityAddMeal extends AppCompatActivity {
     Dialog mDialog;
     Button mDialogWaga;
     EditText mDialogEditText;
+    static int idbuffer = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,26 +55,45 @@ public class ActivityAddMeal extends AppCompatActivity {
         mContext = this;
         mFoodDatabase = MainActivity.mFoodDatabase;
 
-        addnew = mMeal == null;
-        if (addnew) {
-            mMeal = new Meal();
+        {
+            Bundle b = getIntent().getExtras();
+            if ( b == null || b.containsKey("id") == false ) {
+            } else {
+                idbuffer = b.getInt("id");
+            }
+            addnew = idbuffer < 0;
+            logger.l(this, "addnew="+addnew+" id="+idbuffer);
+            if (addnew) {
+                mMeal = new Meal();
+            } else {
+                mMeal = mFoodDatabase.findMeal( idbuffer );
+            }
+        }
+        if ( mMeal == null ) {
+            throw new RuntimeException("mMeal == null");
         }
 
         mName = (EditText) findViewById(R.id.add_meal_name);
+        if ( mName == null ) {
+            throw new RuntimeException("mName == null");
+        }
         mName.setText(mMeal.name);
 
         mInfo = (TextView) findViewById(R.id.add_meal_info);
 
         mIngredientsList = (ListView) findViewById(R.id.add_meal_ingredients_info);
-        mIngredientsListAdapter = new ArrayAdapter<IngredientPart>(this, R.layout.abstract_row_left_right, mMeal.ingredients) {
+        mIngredientsListAdapter = new ArrayAdapter<IngredientPart>(this, R.layout.abstract_row_title_left_right, mMeal.ingredients) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                IngredientPart i = getItem(position);
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_left_right, parent, false);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_title_left_right, parent, false);
                 }
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(i.toString());
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText("");
+                IngredientPart ip = getItem(position);
+                Ingredient i = ip.ingredient;
+                ((TextView) convertView.findViewById(R.id.abstract_row_title)).setText(i.name);
+                ((TextView) convertView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie:%.1fkcal Białka:%.1fg Tłuszcze:%.1fg Węglowodany:%.1fg Błonnik:%.1fg", i.calories, i.protein, i.fat, i.carbs, i.fiber));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("%.1f g\nWBT:%.2f\nWW:%.2f", ip.howmuch, i.getWBT(), i.getWW()));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(3);
                 return convertView;
             }
         };
@@ -87,17 +108,18 @@ public class ActivityAddMeal extends AppCompatActivity {
                 View DialogView = getLayoutInflater().inflate(R.layout.add_meal_add_ingredient_dialog, null);
 
                 mDialog = new AlertDialog.Builder(ActivityAddMeal.this)
-                        .setTitle("Edytuj składnik")
+                        .setTitle("Edytuj ilość składnika")
                         .setMessage(ip.toString())
                         .setView(DialogView)
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User clicked OK button
                                 mDialogPositiveButton(ip);
+                                onResume();
 
                             }
                         })
-                        .setNegativeButton("usuń", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.remove, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User cancelled the dialog
                                 mMeal.ingredients.remove(ip);
@@ -170,14 +192,23 @@ public class ActivityAddMeal extends AppCompatActivity {
 
 
         if (addnew) {
-            getSupportActionBar().setTitle("Dodaj posiłek");
-            mCancelButton.setText("Anuluj");
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Dodaj posiłek");
+            }
+            mCancelButton.setText(R.string.cancel);
         } else {
-            getSupportActionBar().setTitle("Edytuj posiłek");
-            mCancelButton.setText("Usuń");
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Edytuj posiłek");
+            }
+            mCancelButton.setText(R.string.remove);
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        mMeal = null;
+        super.onDestroy();
+    }
 
     private void mDialogWagaOnClick(View arg0) {
         if (MainActivity.mScale != null) {
@@ -213,7 +244,6 @@ public class ActivityAddMeal extends AppCompatActivity {
         }
         ip.howmuch = howmuch;
         mDialog.cancel();
-        finish();
     }
 
     @Override
@@ -223,24 +253,17 @@ public class ActivityAddMeal extends AppCompatActivity {
 
         mMeal.name = mName.getText().toString();
         Ingredient mealsum = mMeal.sum();
-        String str =
-                String.format("Posiłek: %s\n", mMeal.toString()) +
+        String str = String.format("Utworzony: %s\n", new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss").format(mMeal.creationDate)) +
                         String.format("Ilosć składników: %d\n", mMeal.ingredients.size()) +
                         String.format("Wartości odżywcze posiłku:\n%s", mealsum.toStringNoName());
         mInfo.setText(str);
 
         mIngredientsListAdapter.notifyDataSetChanged();
-        mIngredientsList.setAdapter(mIngredientsListAdapter);
     }
 
     public void startActivityAddIngredient() {
         Intent intent = new Intent(this, ActivityAddMealAddIngredient.class);
+        ActivityAddMealAddIngredient.mMeal = mMeal;
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-        }
     }
 }

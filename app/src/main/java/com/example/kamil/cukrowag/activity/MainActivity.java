@@ -27,13 +27,15 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager mViewPager;
-    private PagerAdapter mPagerAdapter;
+    private PagerAdapter mViewPagerAdapter;
     static public Scale mScale = null;
     SharedPreferences prefs = null;
     static public FoodDatabase mFoodDatabase;
     static final String mFoodDatabaseFileName = "mFoodDatabase.dat";
     TabLayout mTabLayout;
-    int mViewPagerPos = -1;
+    static final Integer mViewPagetPosDefault = 1;
+    Integer mViewPagerPos = mViewPagetPosDefault;
+    static final String mViewPagerPosFileName = "mViewPagerPos.dat";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +43,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        mViewPagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         mViewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
-        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.activity_main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(0).setIcon(R.mipmap.ic_launcher);
         mTabLayout.getTabAt(1).setIcon(R.drawable.ic_meal);
         mTabLayout.getTabAt(2).setIcon(R.drawable.ic_food);
-        mViewPager.setCurrentItem(1);
 
         // Set the intent filter for the broadcast receiver, and register.
         IntentFilter filter = new IntentFilter();
@@ -61,14 +62,73 @@ public class MainActivity extends AppCompatActivity {
 
         if ( HandleSerializable.canLoad(this, mFoodDatabaseFileName) == false || prefs.getBoolean("firstrun", true) == true) {
             // Do first run stuff here then set 'firstrun' as false
-            importFoodDatabase(this);
+            logger.l("First run!");
+            this.importFoodDatabase(this);
+            prefs.edit().putBoolean("firstrun", false).commit();
+        } else {
+            try {
+                logger.l("Importing food database from filename");
+                FoodDatabase temp;
+                temp = (FoodDatabase) HandleSerializable.load(this, mFoodDatabaseFileName);
+                mFoodDatabase = temp;
+            } catch(IOException | ClassNotFoundException e) {
+                logger.a(this, e.toString());
+                logger.l("Error: Importing food database from filename");
+                this.importFoodDatabase(this);
+            }
+        }
+        if ( mFoodDatabase == null ) {
+            logger.l("ERRORRR mFoodDatabase == null");
+        }
+        logger.l(this, "");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            if ( HandleSerializable.canLoad(this, mViewPagerPosFileName) ) {
+                Integer temp;
+                temp = (Integer) HandleSerializable.load(this, mViewPagerPosFileName);
+                mViewPagerPos = temp;
+            }
+        } catch(IOException | ClassNotFoundException e) {
+            logger.l(this, e.toString());
+            mViewPagerPos = -1;
+        }
+        if(mViewPager != null && mViewPagerPos >= 0 && mViewPagerPos < mViewPagerAdapter.getCount() ) {
+            mViewPager.setCurrentItem(mViewPagerPos);
+        } else {
+            mViewPager.setCurrentItem(mViewPagetPosDefault);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        mViewPagerPos = mViewPager.getCurrentItem();
+        try {
+            HandleSerializable.save(this, mViewPagerPos, mViewPagerPosFileName);
+        } catch(IOException e) {
+            logger.a(this, e.toString());
+        }
+        super.onStop();
+    }
+
+    static public void importFoodDatabase(Context context) {
+        try {
+            FoodDatabase temp;
+            temp = new FoodDatabase();
+            temp.databaseImport(context);
+            logger.t(context, "Zaimportowano nową bazę danych");
+            mFoodDatabase = temp;
+
             try {
                 Meal m = new Meal();
                 m.ingredients.add(new IngredientPart(mFoodDatabase.findObj(mFoodDatabase.getIngredients(), 1), 100));
                 m.name = "test posilek1";
                 mFoodDatabase.add(m);
             } catch (Exception e) {
-                logger.a(this, e.toString());
+                logger.a(context, e.toString());
             }
             try {
                 Meal m = new Meal();
@@ -76,33 +136,15 @@ public class MainActivity extends AppCompatActivity {
                 m.name = "test posilek2";
                 mFoodDatabase.add(m);
             } catch (Exception e) {
-                logger.a(this, e.toString());
+                logger.a(context, e.toString());
             }
 
-            prefs.edit().putBoolean("firstrun", false).commit();
-        } else {
-            FoodDatabase temp;
-            try {
-                temp = (FoodDatabase) HandleSerializable.load(this, mFoodDatabaseFileName);
-                mFoodDatabase = temp;
-            } catch(IOException | ClassNotFoundException e) {
-                logger.a(this, e.toString());
-                mFoodDatabase = new FoodDatabase();
-            }
-        }
+            saveFoodDatabase(context);
 
-
-        logger.l(this, "");
-    }
-
-    static public void importFoodDatabase(Context context) {
-        FoodDatabase temp;
-        try {
-            temp = new FoodDatabase();
-            temp.databaseImport(context);
-            logger.t(context, "Zaimportowano nową bazę danych");
-            mFoodDatabase = temp;
+            logger.l("TUTAJ1");
         } catch(Exception e) {
+            logger.l("TUTAJ2");
+            mFoodDatabase = new FoodDatabase();
             logger.a(context, e.toString());
         }
     }
@@ -110,15 +152,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // save database
-        try {
-            HandleSerializable.save(this, mFoodDatabase, mFoodDatabaseFileName);
-        } catch (IOException e) {
-            logger.a(this, e.toString());
-        }
         // Unregister the BroadcastReceiver
+        saveFoodDatabase(this);
         unregisterReceiver(mUsbDetachReceiver);
         logger.l(this, "");
+    }
+
+    public static void saveFoodDatabase(Context context) {
+        try {
+            HandleSerializable.save(context, mFoodDatabase, mFoodDatabaseFileName);
+        } catch (IOException e) {
+            logger.a(context, e.toString());
+        }
     }
 
     @Override
@@ -137,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_add_meal: {
-                ActivityAddMeal.mMeal = null;
                 Intent intent = new Intent(this, ActivityAddMeal.class);
+                intent.putExtra("id", -1);
                 startActivity(intent);
             }   return true;
             case R.id.action_add_ingredient: {
-                ActivityAddIngredient.mIngredient = null;
                 Intent intent = new Intent(this, ActivityAddIngredient.class);
+                intent.putExtra("id", -1);
                 startActivity(intent);
             }    return true;
             case R.id.action_menu:
@@ -195,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             logger.l(this, "intent: " + intent.toString());
-            if ( intent.getAction() != null ) {
+            if (intent.getAction() != null) {
                 if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) { // active intent
                     UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (usbDevice != null) {
@@ -206,9 +251,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(mViewPager != null && mViewPagerPos > 0 ) {
-            mViewPager.setCurrentItem(mViewPagerPos);
-        }
+        saveFoodDatabase(this);
     }
 
     // Catch a USB detach broadcast intent.

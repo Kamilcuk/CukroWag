@@ -25,33 +25,9 @@ public class weightReport {
             "oz",           // ounce
             "lbs"           // pound
     };
-
     public byte status;
     public byte unit;
     public double weight; // in grams
-
-    public boolean allOk() {
-        switch(status) {
-            case 0x01:
-                return false;
-            case 0x02:
-                return true;
-            case 0x03:
-                return false;
-            case 0x04:
-                return true;
-            case 0x05:
-                return false;
-            case 0x06:
-                return true;
-            case 0x07:
-                return false;
-            case 0x08:
-                return false;
-            default:
-                return false;
-        }
-    }
 
     public byte getStatus() {
         return status;
@@ -84,12 +60,60 @@ public class weightReport {
             throw new Exception("Error reading scale data\n");
         }
 
-        /*switch(getUnit()) {
+        switch(getUnit()) {
             case "mg": weight *= 1000; unit=2; break;
             case "g": break;
             case "kg": weight /= 1000; unit=2; break;
             case "tonnes": weight /= 1000000; unit=2; break;
-        }*/
+        }
+
+        weight *= minusSign();
+    }
+
+    public boolean allOk() {
+        switch(status) {
+            case 0x01:
+                return false;
+            case 0x02:
+                return true;
+            case 0x03:
+                return false;
+            case 0x04:
+                return true;
+            case 0x05:
+                return true;
+            case 0x06:
+                return true;
+            case 0x07:
+                return false;
+            case 0x08:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    public int minusSign() {
+        switch(status) {
+            case 0x01:
+                return 0;
+            case 0x02:
+                return 0;
+            case 0x03:
+                return 1;
+            case 0x04:
+                return 1;
+            case 0x05:
+                return -1;
+            case 0x06:
+                return 0;
+            case 0x07:
+                return 0;
+            case 0x08:
+                return 0;
+            default:
+                return 0;
+        }
     }
 
     public final String getUnit() {
@@ -101,7 +125,7 @@ public class weightReport {
             case 0x01:
                 return "Scale reports Fault\n";
             case 0x02:
-                return "Scale is zero'd...\n";
+                return "Scale is zero'd...: "+String.valueOf(weight)+" "+UNITS[unit]+"\n";
             case 0x03:
                 return "Weighing...\n";
             //
@@ -112,7 +136,7 @@ public class weightReport {
             case 0x04:
                 return String.valueOf(weight)+" "+UNITS[unit]+"\n";
             case 0x05:
-                return "Scale reports Under Zero\n";
+                return "Scale reports Under Zero: -"+ String.valueOf(weight)+" "+UNITS[unit]+"\n";
             case 0x06:
                 return "Scale reports Over Weight\n";
             case 0x07:

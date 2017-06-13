@@ -34,7 +34,8 @@ public class UsbScale extends Scale {
         if ( mConnection.claimInterface(mUsbInterface, true) == false ) {
             throw new Exception("Could not claim usb interface");
         }
-        rawread(); // read, discard first data
+        // discard first data
+        rawread();
     }
 
     @Override
@@ -50,12 +51,10 @@ public class UsbScale extends Scale {
             if (!request.queue(buf, buf.limit())) {
                 throw new Exception("Error queueing request.");
             }
-
-            final UsbRequest response = mConnection.requestWait(); // 10 seconds
+            final UsbRequest response = mConnection.requestWait();
             if (response == null) {
                 throw new Exception("Null response");
             }
-            // final int nread = buf.position();
             return buf.array();
         } finally {
             request.close();

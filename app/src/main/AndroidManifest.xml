@@ -16,7 +16,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -56,7 +56,6 @@
         <activity android:name=".activity.MyPreferencesActivity"
             android:parentActivityName=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black"
             android:exported="true"
             android:icon="@mipmap/ic_launcher" >
         </activity>

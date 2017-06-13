@@ -2,8 +2,19 @@
     <string name="app_name">CukroWag</string>
     <string name="action_meal">Posiłki</string>
     <string name="action_settings">Ustawienia</string>
+
     <string name="pref_scale_test">pref_scale_test</string>
     <string name="pref_enable_usb_weight_scale">pref_enable_usb_weight_scale</string>
     <string name="pref_refresh_fooddatabase">pref_refresh_fooddatabase</string>
     <string name="add_ingredient_dialog_waga_button">Waga</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Anuluj</string>
+    <string name="remove">Usuń</string>
+
+    <string name="activity_information_textview">Aplikacja "CukroWag" jest przeznaczona do monitorowania spożywanych posiłków i ich wartości odżywczych.\n
+Aplikacja oblicza wskaźniki Wymienników Węglowodanowych oraz Wskaźników Białkowo Tłuszczowych posiłków. Jest to ważna informacja dla osób chorych na cukrzycę, ale także dla osób interesujących się zdrowym odżywianiem.\n
+\n
+\n
+Autor: Kamil Cukrowski © 2017</string>
 </resources>

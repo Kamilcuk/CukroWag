@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 
 public class IngredientCategory extends HasIdName implements Serializable {
+    static final long serialVersionUID = 42L;
+    public IngredientCategory() {}
     public IngredientCategory(int id, String name) {
         super(id, name);
     }

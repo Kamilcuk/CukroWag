@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class Ingredient extends HasIdName implements Serializable {
+    static final long serialVersionUID = 42L;
     public IngredientCategory category = null;
     public double calories = 0; // kalorie
     public double protein = 0; // białka

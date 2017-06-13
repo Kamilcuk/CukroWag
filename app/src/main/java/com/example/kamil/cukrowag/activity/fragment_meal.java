@@ -18,8 +18,6 @@ import com.example.kamil.cukrowag.util.logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by kamil on 09.06.17.
@@ -34,15 +32,17 @@ public class fragment_meal extends FragmentListSearch<Meal> {
 
         mFoodDatabase = MainActivity.mFoodDatabase;
 
-        super.setListAdapter(new ArrayAdapter<Meal>(mContext, R.layout.abstract_row_left_right, new ArrayList<Meal>(mFoodDatabase.mMeals)) {
+        super.setListAdapter(new ArrayAdapter<Meal>(mContext, R.layout.abstract_row_title_left_right, new ArrayList<Meal>(mFoodDatabase.mMeals)) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 Meal m = getItem(position);
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_left_right, parent, false);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_title_left_right, parent, false);
                 }
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(m.name);
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(new SimpleDateFormat("yyyy/MM/dd   HH:mm:ss").format(m.creationDate));
+                ((TextView) convertView.findViewById(R.id.abstract_row_title)).setText(m.name);
+                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(m.sum().toStringNoName());
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss").format(m.creationDate));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(2);
                 return convertView;
             }
         });
@@ -59,7 +59,7 @@ public class fragment_meal extends FragmentListSearch<Meal> {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                final Meal i = mListAdapter.getItem(position);
+                final Meal i = mFoodDatabase.findMeal(mListAdapter.getItem(position).getId());
                 new AlertDialog.Builder(mContext)
                         .setTitle("Co zrobić z posiłkiem?")
                         .setMessage(i.toString())
@@ -102,14 +102,14 @@ public class fragment_meal extends FragmentListSearch<Meal> {
     }
 
     private void editMeal(final Meal i) {
-        ActivityAddMeal.mMeal = new Meal(i);
         Intent intent = new Intent(mContext, ActivityAddMeal.class);
+        intent.putExtra("id", i.getId());
         startActivity(intent);
     }
 
     private void newMeal() {
-        ActivityAddMeal.mMeal = null;
         Intent intent = new Intent(mContext, ActivityAddMeal.class);
+        intent.putExtra("id", -1);
         startActivity(intent);
     }
 
@@ -117,12 +117,6 @@ public class fragment_meal extends FragmentListSearch<Meal> {
     public void onResume() {
         logger.l("mFoodDatabase.mMeals.size()="+mFoodDatabase.mMeals.size()+" mQuerystring="+mQuerystring);
         super.onResume();
-        Collections.sort(mFoodDatabase.mMeals, new Comparator<Meal>() {
-            @Override
-            public int compare(Meal m2, Meal m1) {
-                return m1.creationDate.compareTo(m2.creationDate);
-            }
-        });
         super.filterRefreshListAdapter(mFoodDatabase.mMeals);
     }
 }
