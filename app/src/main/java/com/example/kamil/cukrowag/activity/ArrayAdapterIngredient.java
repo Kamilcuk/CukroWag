@@ -27,8 +27,8 @@ public class ArrayAdapterIngredient extends ArrayAdapter<Ingredient> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_title_left_right, parent, false);
         }
         ((TextView) convertView.findViewById(R.id.abstract_row_title)).setText(i.name);
-        ((TextView) convertView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie:%.1fkcal Białka:%.1fg Tłuszcze:%.1fg Węglowodany:%.1fg Błonnik:%.1fg", i.calories, i.protein, i.fat, i.carbs, i.fiber));
-        ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("WBT:%.2f\nWW:%.2f", i.getWBT(), i.getWW()));
+        ((TextView) convertView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie: %.1f kcal\nBiałka: %.1f g\nTłuszcze: %.1f g\nWęglowodany: %.1f g\nBłonnik: %.1f g", i.calories, i.protein, i.fat, i.carbs, i.fiber));
+        ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("WBT: %.2f\nWW: %.2f", i.getWBT(), i.getWW()));
         ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(2);
         return convertView;
     }

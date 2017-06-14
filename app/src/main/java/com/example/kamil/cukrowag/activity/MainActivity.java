@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         mTabLayout = (TabLayout) findViewById(R.id.activity_main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(0).setIcon(R.mipmap.ic_launcher);
-        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_meal);
-        mTabLayout.getTabAt(2).setIcon(R.drawable.ic_food);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.menu);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.meal);
+        mTabLayout.getTabAt(2).setIcon(R.drawable.ingredients);
 
         // Set the intent filter for the broadcast receiver, and register.
         IntentFilter filter = new IntentFilter();

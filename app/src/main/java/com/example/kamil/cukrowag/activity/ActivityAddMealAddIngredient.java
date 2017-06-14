@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kamil.cukrowag.R;
@@ -78,7 +79,7 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
     private void addIngredientToMealDialog(final Ingredient i) {
         View DialogView = getLayoutInflater().inflate(R.layout.add_meal_add_ingredient_dialog, null);
         dialog = new AlertDialog.Builder(this)
-                .setMessage(i.toString()).setTitle("Dodaj składnik do posiłku")
+                .setTitle("Dodaj składnik do posiłku")
                 .setView(DialogView)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -92,6 +93,11 @@ public class ActivityAddMealAddIngredient extends AppCompatActivity implements S
                         dialog.cancel();
                     }
                 }).create();
+
+        ((TextView) DialogView.findViewById(R.id.abstract_row_title)).setText(i.name);
+        ((TextView) DialogView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie: %.1f kcal\nBiałka: %.1f g\nTłuszcze: %.1f g\nWęglowodany: %.1f g\nBłonnik: %.1f g", i.calories, i.protein, i.fat, i.carbs, i.fiber));
+        ((TextView) DialogView.findViewById(R.id.abstract_row_right)).setText(String.format("WBT: %.2f\nWW: %.2f", i.getWBT(), i.getWW()));
+        ((TextView) DialogView.findViewById(R.id.abstract_row_right)).setMaxLines(3);
 
         mDialogWaga = (Button)DialogView.findViewById(R.id.add_ingredient_dialog_waga_button);
         mDialogWaga.setEnabled(MainActivity.mScale != null);

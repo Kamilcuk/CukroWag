@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="right\nright longer line"
-            android:gravity="center|right"
+            android:gravity="center|left"
             android:maxLines="2" />
 
     </LinearLayout>

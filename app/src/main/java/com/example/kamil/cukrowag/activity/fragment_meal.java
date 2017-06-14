@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.kamil.cukrowag.R;
 import com.example.kamil.cukrowag.food.FoodDatabase;
+import com.example.kamil.cukrowag.food.Ingredient;
 import com.example.kamil.cukrowag.food.Meal;
 import com.example.kamil.cukrowag.util.logger;
 
@@ -35,14 +36,16 @@ public class fragment_meal extends FragmentListSearch<Meal> {
         super.setListAdapter(new ArrayAdapter<Meal>(mContext, R.layout.abstract_row_title_left_right, new ArrayList<Meal>(mFoodDatabase.mMeals)) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                Meal m = getItem(position);
                 if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.abstract_row_title_left_right, parent, false);
                 }
+                Meal m = getItem(position);
+                Ingredient s = m.sum();
                 ((TextView) convertView.findViewById(R.id.abstract_row_title)).setText(m.name);
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(m.sum().toStringNoName());
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss").format(m.creationDate));
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(2);
+                ((TextView) convertView.findViewById(R.id.abstract_row_left)).setText(
+                        String.format("Kalorie: %.1f kcal\nBiałka: %.1f g\nTłuszcze: %.1f g\nWęglowodany: %.1f g\nBłonnik: %.1f g", s.calories, s.protein, s.fat, s.carbs, s.fiber));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("%s\n\nWBT: %.2f\nWW: %.2f", new SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss").format(m.creationDate), s.getWBT(), s.getWW()));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(5);
                 return convertView;
             }
         });

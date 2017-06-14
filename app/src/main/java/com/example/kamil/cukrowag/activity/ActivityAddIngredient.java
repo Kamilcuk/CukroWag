@@ -92,7 +92,7 @@ public class ActivityAddIngredient extends AppCompatActivity {
                 loadValues();
             }
         }
-        getSupportActionBar().setTitle(addnew ? "Dodaj posiłek" : "Edytuj posiłek");
+        getSupportActionBar().setTitle(addnew ? "Dodaj składnik" : "Edytuj składnik");
         cancel.setText(addnew ? "Anuluj" : "Usuń");
     }
 

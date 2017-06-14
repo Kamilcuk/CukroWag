@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="20dp"
-    android:maxWidth="70dp" >
+    android:orientation="vertical">
+    <include layout="@layout/abstract_row_title_left_right" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/add_ingredient_dialog_waga_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:digits="0123456789,."
-            android:inputType="numberDecimal"
-            android:minWidth="10dp"
-            android:text="" />
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="g"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
-        </RelativeLayout>
-    </LinearLayout>
-    <Button
-        android:id="@+id/add_ingredient_dialog_waga_button"
-        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_ingredient_dialog_waga_button" />
+        android:maxWidth="100dp"
+        android:minWidth="100dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp">
+            <EditText
+                android:id="@+id/add_ingredient_dialog_waga_edittext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:digits="0123456789,."
+                android:inputType="numberDecimal"
+                android:minWidth="10dp"
+                android:text=""
+                android:gravity="right"
+                android:textAppearance="@android:style/TextAppearance.Medium" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="g"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+            </RelativeLayout>
+        </LinearLayout>
+        <Button
+            android:id="@+id/add_ingredient_dialog_waga_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_ingredient_dialog_waga_button" />
+    </LinearLayout>
+        </RelativeLayout>
+
 </LinearLayout>

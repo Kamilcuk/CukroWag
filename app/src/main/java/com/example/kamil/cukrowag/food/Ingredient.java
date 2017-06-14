@@ -51,7 +51,7 @@ public class Ingredient extends HasIdName implements Serializable {
         return String.format("%s\n", name) + toStringNoName();
     }
     public String toStringNoName() {
-        return String.format("Kalorie:%.1fkcal Białka:%.1fg Tłuszcze:%.1fg\n", calories, protein, fat)+
-                String.format("Węglowodany:%.1fg Błonnik:%.1fg WBT:%.2f WW:%.2f\n", carbs, fiber, getWBT(), getWW());
+        return String.format("Kalorie: %.1fkcal; Białka: %.1fg; Tłuszcze: %.1fg;\n", calories, protein, fat)+
+                String.format("Węglowodany: %.1fg; Błonnik: %.1fg; \nWBT: %.2f; WW: %.2f\n", carbs, fiber, getWBT(), getWW());
     }
 }

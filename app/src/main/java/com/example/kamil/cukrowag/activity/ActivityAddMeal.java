@@ -91,8 +91,8 @@ public class ActivityAddMeal extends AppCompatActivity {
                 IngredientPart ip = getItem(position);
                 Ingredient i = ip.ingredient;
                 ((TextView) convertView.findViewById(R.id.abstract_row_title)).setText(i.name);
-                ((TextView) convertView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie:%.1fkcal Białka:%.1fg Tłuszcze:%.1fg Węglowodany:%.1fg Błonnik:%.1fg", i.calories, i.protein, i.fat, i.carbs, i.fiber));
-                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("%.1f g\nWBT:%.2f\nWW:%.2f", ip.howmuch, i.getWBT(), i.getWW()));
+                ((TextView) convertView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie: %.1f kcal\nBiałka: %.1f g\nTłuszcze: %.1f g\nWęglowodany: %.1f g\nBłonnik: %.1f g", i.calories, i.protein, i.fat, i.carbs, i.fiber));
+                ((TextView) convertView.findViewById(R.id.abstract_row_right)).setText(String.format("%.1f g\nWBT: %.2f\nWW: %.2f", ip.howmuch, i.getWBT(), i.getWW()));
                 ((TextView) convertView.findViewById(R.id.abstract_row_right)).setMaxLines(3);
                 return convertView;
             }
@@ -104,12 +104,12 @@ public class ActivityAddMeal extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 final IngredientPart ip = mIngredientsListAdapter.getItem(position);
+                final Ingredient i = ip.ingredient;
 
                 View DialogView = getLayoutInflater().inflate(R.layout.add_meal_add_ingredient_dialog, null);
 
                 mDialog = new AlertDialog.Builder(ActivityAddMeal.this)
-                        .setTitle("Edytuj ilość składnika")
-                        .setMessage(ip.toString())
+                        .setTitle("Edytuj wagę składnika ")
                         .setView(DialogView)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -128,6 +128,11 @@ public class ActivityAddMeal extends AppCompatActivity {
                             }
                         }).create();
 
+                ((TextView) DialogView.findViewById(R.id.abstract_row_title)).setText(i.name);
+                ((TextView) DialogView.findViewById(R.id.abstract_row_left)) .setText(String.format("Kalorie: %.1f kcal\nBiałka: %.1f g\nTłuszcze: %.1f g\nWęglowodany: %.1f g\nBłonnik: %.1f g", i.calories, i.protein, i.fat, i.carbs, i.fiber));
+                ((TextView) DialogView.findViewById(R.id.abstract_row_right)).setText(String.format("%.1f g\nWBT: %.2f\nWW: %.2f", ip.howmuch, i.getWBT(), i.getWW()));
+                ((TextView) DialogView.findViewById(R.id.abstract_row_right)).setMaxLines(3);
+
                 mDialogWaga = (Button) DialogView.findViewById(R.id.add_ingredient_dialog_waga_button);
                 mDialogWaga.setEnabled(MainActivity.mScale != null);
                 mDialogWaga.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +150,7 @@ public class ActivityAddMeal extends AppCompatActivity {
                         lManager.showSoftInput(mDialogEditText, 0);
                     }
                 });
-                mDialogEditText.setText(String.format("%.2f", ip.howmuch));
+                mDialogEditText.setText(String.format("%.1f", ip.howmuch));
 
                 mDialog.show();
             }
@@ -213,7 +218,7 @@ public class ActivityAddMeal extends AppCompatActivity {
     private void mDialogWagaOnClick(View arg0) {
         if (MainActivity.mScale != null) {
             try {
-                mDialogEditText.setText(String.format("%.2f", MainActivity.mScale.getWeightReport().getWeight()));
+                mDialogEditText.setText(String.format("%.1f", MainActivity.mScale.getWeightReport().getWeight()));
             } catch (Exception e) {
                 Toast.makeText(this, "Blad wewnetrzny: " + e.toString(), Toast.LENGTH_LONG).show();
             }
@@ -239,7 +244,7 @@ public class ActivityAddMeal extends AppCompatActivity {
             return;
         }
         if (howmuch <= 0) {
-            Toast.makeText(this, "Waga składnika (" + String.format("%.2f", howmuch) + ") musi być większa od zera", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Waga składnika (" + String.format("%.1f", howmuch) + ") musi być większa od zera", Toast.LENGTH_LONG).show();
             return;
         }
         ip.howmuch = howmuch;
@@ -252,10 +257,12 @@ public class ActivityAddMeal extends AppCompatActivity {
         super.onResume();
 
         mMeal.name = mName.getText().toString();
-        Ingredient mealsum = mMeal.sum();
+        Ingredient s = mMeal.sum();
         String str = String.format("Utworzony: %s\n", new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss").format(mMeal.creationDate)) +
                         String.format("Ilosć składników: %d\n", mMeal.ingredients.size()) +
-                        String.format("Wartości odżywcze posiłku:\n%s", mealsum.toStringNoName());
+                        String.format("Wartości odżywcze posiłku:\n") +
+                        String.format("Kalorie: %.1f kcal;  Białka: %.1f g;  Tłuszcze: %.1f g;\n", s.calories, s.protein, s.fat)+
+                        String.format("Węglowodany: %.1f g;  Błonnik: %.1f g; \nWBT: %.2f;   WW: %.2f\n", s.carbs, s.fiber, s.getWBT(), s.getWW());
         mInfo.setText(str);
 
         mIngredientsListAdapter.notifyDataSetChanged();
